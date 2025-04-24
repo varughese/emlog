@@ -8,7 +8,7 @@ function PostCard(post: Post) {
 
   return (
     <div className="mb-8">
-      <h2 className="text-xl">
+      <h2 className="text-xl font-serif">
         <Link
           href={post.url}
           className="text-blue-700 hover:text-blue-900"
@@ -16,11 +16,16 @@ function PostCard(post: Post) {
           {post.title}
         </Link>
       </h2>
-      <time dateTime={post.date} className="block mb-2 text-xs text-gray-600">
-        {format(parseISO(post.date), "LLLL d, yyyy")}
+      <time dateTime={post.date} className="block mb-2 text-xs text-gray-600 font-serif">
+        {format(parseISO(post.date), "LLLL d, yyyy")} | {post.author}
       </time>
       <div className="text-sm">
-        <Content />
+        <div className="line-clamp-5 mb-2">
+          <Content />
+        </div>
+        <Link href={post.url} className="text-blue-700 italic hover:text-blue-900 text-sm">
+          Read more
+        </Link>
       </div>
     </div>
   );
@@ -33,8 +38,6 @@ export default function Home() {
 
   return (
     <div className="max-w-xl py-8 mx-auto">
-      <h1 className="mb-8 text-3xl font-bold text-center">Next.js Example</h1>
-
       {posts.map((post, idx) => (
         <PostCard key={idx} {...post} />
       ))}

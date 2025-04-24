@@ -1,8 +1,18 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=Playfair+Display:wght@400;700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    font-family: "Playfair Display", serif;
+  }
+
+  body {
+    /* @apply bg-amber-50; */
+  }
+}
 
 p {
   @apply mb-4;
@@ -14,8 +24,7 @@ h3,
 h4,
 h5,
 h6 {
-  @apply font-bold
-    mb-1;
+  @apply font-bold mb-1;
 }
 
 h1 {
@@ -24,4 +33,15 @@ h1 {
 
 h2 {
   @apply text-xl;
+}
+
+/* Styles for links in Markdown content */
+.prose a {
+  @apply text-blue-600 hover:text-blue-800 transition-colors duration-200;
+  @apply underline decoration-1 underline-offset-2;
+  @apply hover:decoration-2;
+}
+
+.prose a:visited {
+  @apply text-purple-600 hover:text-purple-800;
 }
