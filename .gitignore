@@ -1,5 +1,6 @@
 # dependencies
 node_modules
+node_modules/
 
 # next
 dist
@@ -17,3 +18,7 @@ yarn-error.log
 .DS_Store
 
 .vercel/
+
+.env
+
+client_secret.json
