@@ -21,4 +21,6 @@ yarn-error.log
 
 .env
 
+# editor
 client_secret.json
+.cache.json

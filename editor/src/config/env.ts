@@ -16,6 +16,9 @@ export const config = {
         secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
         bucketName: process.env.R2_BUCKET_NAME,
     },
+    cache: {
+        path: path.resolve(__dirname, '../../.cache.json'),
+    },
 } as const;
 
 // Validate required environment variables

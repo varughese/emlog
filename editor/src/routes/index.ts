@@ -1,6 +1,7 @@
 import express from 'express';
 import { GoogleService } from '../services/google';
 import { MarkdownService } from '../services/markdownService';
+import { ServiceLocator } from '../services/serviceLocator';
 
 const router = express.Router();
 const googleService = new GoogleService();
@@ -13,7 +14,6 @@ router.get('/auth/login', (req, res) => {
 });
 
 router.get('/auth/callback', async (req: express.Request, res: express.Response) => {
-    console.log('callback');
     const { code } = req.query;
 
     if (!code || typeof code !== 'string') {
@@ -24,6 +24,8 @@ router.get('/auth/callback', async (req: express.Request, res: express.Response)
         const tokens = await googleService.getTokens(code);
         // Store tokens in session
         req.session.tokens = tokens;
+        const cacheService = ServiceLocator.getInstance().getCacheService();
+        cacheService.set('tokens', tokens);
         res.json({ success: true });
     } catch (error) {
         console.error('Error getting tokens:', error);
@@ -33,7 +35,9 @@ router.get('/auth/callback', async (req: express.Request, res: express.Response)
 
 // Middleware to check authentication
 const requireAuth = (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    if (!req.session.tokens) {
+    const cacheService = ServiceLocator.getInstance().getCacheService();
+    const tokens = cacheService.get('tokens');
+    if (!tokens && !req.session.tokens) {
         return res.status(401).json({ error: 'Not authenticated' });
     }
     next();
@@ -47,6 +51,12 @@ router.get('/documents/:documentId', requireAuth, async (req: express.Request, r
         // Set the tokens for this request
         googleService.setCredentials(req.session.tokens);
         const document = await googleService.getDocument(documentId);
+
+        if (req.query.format === 'raw') {
+            res.json({ document });
+            return;
+        }
+
         const markdown = markdownService.convertToMarkdown(document);
         res.setHeader('Content-Type', 'text/markdown');
         res.send(markdown);

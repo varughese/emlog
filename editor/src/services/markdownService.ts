@@ -1,7 +1,7 @@
 import { GoogleDocsDocument } from '../types/google';
 
 export class MarkdownService {
-    private convertParagraphToMarkdown(paragraph: any): string {
+    private convertParagraphToMarkdown(paragraph: any, document: GoogleDocsDocument): string {
         let text = '';
 
         if (paragraph.elements) {
@@ -16,6 +16,14 @@ export class MarkdownService {
                     } else {
                         text += content;
                     }
+                } else if (element.inlineObjectElement) {
+                    const imageId = element.inlineObjectElement.inlineObjectId;
+                    const imageObject = document.inlineObjects?.[imageId];
+                    const imageUri = imageObject?.inlineObjectProperties?.embeddedObject?.imageProperties?.contentUri;
+
+                    if (imageUri) {
+                        text += `![Image](${imageUri})`;
+                    }
                 }
             }
         }
@@ -23,8 +31,8 @@ export class MarkdownService {
         return text;
     }
 
-    private convertHeadingToMarkdown(paragraph: any): string {
-        const text = this.convertParagraphToMarkdown(paragraph);
+    private convertHeadingToMarkdown(paragraph: any, document: GoogleDocsDocument): string {
+        const text = this.convertParagraphToMarkdown(paragraph, document);
         const level = paragraph.paragraphStyle?.namedStyleType?.replace('HEADING_', '');
 
         if (level) {
@@ -34,8 +42,8 @@ export class MarkdownService {
         return text;
     }
 
-    private convertListToMarkdown(paragraph: any): string {
-        const text = this.convertParagraphToMarkdown(paragraph);
+    private convertListToMarkdown(paragraph: any, document: GoogleDocsDocument): string {
+        const text = this.convertParagraphToMarkdown(paragraph, document);
         const listId = paragraph.bullet?.listId;
 
         if (listId) {
@@ -55,15 +63,15 @@ export class MarkdownService {
 
                     // Check if it's a heading
                     if (paragraph.paragraphStyle?.namedStyleType?.startsWith('HEADING_')) {
-                        markdown += this.convertHeadingToMarkdown(paragraph);
+                        markdown += this.convertHeadingToMarkdown(paragraph, document);
                     }
                     // Check if it's a list item
                     else if (paragraph.bullet) {
-                        markdown += this.convertListToMarkdown(paragraph);
+                        markdown += this.convertListToMarkdown(paragraph, document);
                     }
                     // Regular paragraph
                     else {
-                        const text = this.convertParagraphToMarkdown(paragraph);
+                        const text = this.convertParagraphToMarkdown(paragraph, document);
                         if (text.trim()) {
                             markdown += `${text}\n\n`;
                         }

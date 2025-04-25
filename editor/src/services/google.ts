@@ -3,10 +3,14 @@ import { OAuth2Client } from 'google-auth-library';
 import { config } from '../config/env';
 import fs from 'fs';
 import path from 'path';
+import { GoogleDocsDocument } from '../types/google';
+import { ServiceLocator } from './serviceLocator';
+import { CacheService } from './cacheService';
 
 export class GoogleService {
     private oauth2Client: OAuth2Client;
     private docs: any;
+    private cacheService: CacheService;
 
     constructor() {
         // Load client secrets from a local file
@@ -19,6 +23,7 @@ export class GoogleService {
         console.log(config);
 
         this.docs = google.docs({ version: 'v1', auth: this.oauth2Client });
+        this.cacheService = ServiceLocator.getInstance().getCacheService();
     }
 
     getAuthUrl(): string {
@@ -43,15 +48,24 @@ export class GoogleService {
         this.oauth2Client.setCredentials(tokens);
     }
 
-    async getDocument(documentId: string) {
-        try {
-            const response = await this.docs.documents.get({
-                documentId,
-            });
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching document:', error);
-            throw error;
+    async getDocument(documentId: string): Promise<GoogleDocsDocument> {
+        // Check cache first
+        const cachedDocument = this.cacheService.get<GoogleDocsDocument>(documentId);
+        if (cachedDocument) {
+            return cachedDocument;
         }
+
+        // If not in cache, fetch from Google
+        const response = await this.docs.documents.get({
+            documentId,
+            auth: this.oauth2Client
+        });
+
+        const document = response.data;
+
+        // Cache the document
+        this.cacheService.set(documentId, document);
+
+        return document;
     }
 } 

@@ -9,6 +9,13 @@ export interface GoogleDocsDocument {
                             bold?: boolean;
                             italic?: boolean;
                         };
+                        smartChip?: {
+                            type?: string;
+                            value?: string;
+                        };
+                    };
+                    inlineObjectElement?: {
+                        inlineObjectId: string;
                     };
                 }>;
                 paragraphStyle?: {
@@ -19,5 +26,16 @@ export interface GoogleDocsDocument {
                 };
             };
         }>;
+    };
+    inlineObjects?: {
+        [key: string]: {
+            inlineObjectProperties?: {
+                embeddedObject?: {
+                    imageProperties?: {
+                        contentUri?: string;
+                    };
+                };
+            };
+        };
     };
 } 
