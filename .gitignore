@@ -4,6 +4,7 @@ node_modules
 # next
 dist
 .next
+out/
 
 # contentlayer
 .contentlayer
