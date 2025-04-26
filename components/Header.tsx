@@ -1,6 +1,6 @@
 import Link from 'next/link'
 
-function Logo() {
+export function Logo() {
   return (
     <Link href="/" className="inline-flex justify-center items-center">
       <span className="font-serif text-2xl font-bold">Emlog</span>

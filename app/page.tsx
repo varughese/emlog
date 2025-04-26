@@ -2,22 +2,24 @@ import Link from "next/link";
 import { compareDesc, format, parseISO } from "date-fns";
 import { allPosts, Post } from "contentlayer/generated";
 import { getMDXComponent } from "next-contentlayer/hooks";
+import { getAuthor } from "utils/author";
+import { Header } from "components/Header";
 
 function PostCard(post: Post) {
   const Content = getMDXComponent(post.body.code);
 
   return (
     <div className="mb-8">
-      <h2 className="text-xl font-serif">
+      <h3 className="text-lg font-serif">
         <Link
           href={post.url}
           className="text-blue-700 hover:text-blue-900"
           legacyBehavior>
           {post.title}
         </Link>
-      </h2>
+      </h3>
       <time dateTime={post.date} className="block mb-2 text-xs text-gray-600 font-serif">
-        {format(parseISO(post.date), "LLLL d, yyyy")} | {post.author}
+        {format(parseISO(post.date), "LLLL d, yyyy")} | {getAuthor(post).nickName}
       </time>
       <div className="text-sm">
         <div className="line-clamp-5 mb-2">
@@ -37,10 +39,28 @@ export default function Home() {
   );
 
   return (
-    <div className="max-w-xl py-8 mx-auto">
-      {posts.map((post, idx) => (
-        <PostCard key={idx} {...post} />
-      ))}
+    <div>
+      <Header />
+      <div className="max-w-xl py-2 mx-auto">
+        <div>
+          <div className="blockquote border-l-4 border-gray-300 pl-4 py-0 mb-8 italic text-xs text-gray-700">
+            <p>
+              The origin of the word “blog” is “web log” in the 1990s. I thought it would be fitting to call these <b>Emlogs</b> because they are a email log of our thoughts.
+            </p>
+
+            <p>
+              I had this idea because I always though the idea of consistent writing would be a good way to become more expressive but also the practice itself would be healthy. I don’t really know the exact mechanics of what I want. I did like the low friction of e-mail to a friend because it has to clear a certain quality bar but it is not too crazy.
+            </p>
+          </div>
+          <p className="mb-8 text-sm">This is how we started the tradition of Emlogs - a way to share musings with each other in a low friction way. Here are some of our favorites.</p>
+        </div>
+        <hr className="my-6" />
+        <div>
+          {posts.map((post, idx) => (
+            <PostCard key={idx} {...post} />
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

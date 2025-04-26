@@ -10,7 +10,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" type="image/x-icon" href="/favicon.png" />
       </head>
       <body>
-        <Header />
         <div className="px-6">{children}</div>
       </body>
     </html>
