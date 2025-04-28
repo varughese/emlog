@@ -52,7 +52,7 @@ export default function Home() {
               I had this idea because I always though the idea of consistent writing would be a good way to become more expressive but also the practice itself would be healthy. I don’t really know the exact mechanics of what I want. I did like the low friction of e-mail to a friend because it has to clear a certain quality bar but it is not too crazy.
             </p>
           </div>
-          <p className="mb-8 text-sm">This is how we started the tradition of Emlogs - a way to share musings with each other in a low friction way. Here are some of our favorites.</p>
+          <p className="mb-8 text-sm">This is how we started the tradition of Emlogs - a low friction way to share musings and practice writing. Here are some of our favorites.</p>
         </div>
         <hr className="my-6" />
         <div>
