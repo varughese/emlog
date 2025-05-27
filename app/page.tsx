@@ -23,7 +23,7 @@ function PostCard(post: Post) {
         dateTime={post.date}
         className="block mb-2 text-xs text-gray-600 dark:text-gray-300 font-serif"
       >
-        {format(parseISO(post.date), "LLLL d, yyyy")} | {getAuthor(post).nickName}
+        {format(parseISO(post.date), "LLLL d, yyyy")} • {getAuthor(post).nickName}
       </time>
       <div className="text-sm">
         <div className="line-clamp-5 mb-2">
